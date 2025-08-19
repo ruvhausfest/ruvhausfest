@@ -2,12 +2,115 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Programm Hausfest 2025</title>
-  <style>html,body,iframe{height:100%;margin:0;border:0} iframe{width:100%;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Programmplakat Hausfest 2025 – PDF</title>
+
+  <!-- Social/Preview: zeigt Titel an, wenn gelinkt wird -->
+  <meta property="og:title" content="Programmplakat Hausfest 2025 – PDF" />
+  <meta property="og:description" content="Öffne oder lade das Programmplakat als PDF." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <style>
+    :root { --bg:#fff; --txt:#111; --muted:#666; --line:#e6e6e6; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--txt); }
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+
+    .bar {
+      position: sticky; top: 0; z-index: 2;
+      display: flex; flex-wrap: wrap; align-items: center; gap: .5rem;
+      padding: .6rem .8rem; border-bottom: 1px solid var(--line); background: var(--bg);
+    }
+    .title { font-weight: 600; margin-right: auto; }
+    .btn {
+      appearance: none; border: 1px solid var(--line); background: #fafafa;
+      padding: .55rem .8rem; border-radius: .6rem; text-decoration: none; color: inherit;
+    }
+    .btn:focus { outline: 2px solid #bbb; outline-offset: 2px; }
+    .wrap { position: relative; height: calc(100dvh - 58px); }
+    @supports (-webkit-touch-callout: none) {
+      .wrap { height: -webkit-fill-available; }
+    }
+    .viewer, .viewer iframe, .viewer object, .viewer embed {
+      width: 100%; height: 100%; border: 0;
+    }
+    .fallback {
+      position: absolute; inset: 0; display: grid; place-items: center; padding: 2rem;
+      text-align: center; color: var(--muted);
+    }
+    .note { font-size: .9rem; color: var(--muted); margin-top: .4rem; }
+  </style>
 </head>
 <body>
-  <iframe src="ProgrammplakatHausfest2025.pdf" title="PDF" loading="lazy"></iframe>
+  <div class="bar">
+    <div class="title">Programmplakat Hausfest 2025 (PDF)</div>
+    <a class="btn" id="openBtn" href="ProgrammplakatHausfest2025.pdf" target="_blank" rel="noopener">Im neuen Tab öffnen</a>
+    <a class="btn" id="downloadBtn" href="ProgrammplakatHausfest2025.pdf" download>Download</a>
+  </div>
+
+  <div class="wrap">
+    <div class="viewer" id="viewer">
+      <!-- Primär: Inline-Anzeige (Desktop/Android meist okay) -->
+      <object id="pdfObj"
+              data="ProgrammplakatHausfest2025.pdf#view=FitH"
+              type="application/pdf">
+        <embed src="ProgrammplakatHausfest2025.pdf#view=FitH" type="application/pdf" />
+        <!-- Fallback, wenn das Einbetten nicht unterstützt wird -->
+        <div class="fallback">
+          <div>
+            <p>Dein Gerät unterstützt die Inline-Ansicht von PDFs nicht.</p>
+            <p>
+              <a class="btn" href="ProgrammplakatHausfest2025.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+              <a class="btn" href="ProgrammplakatHausfest2025.pdf" download>PDF herunterladen</a>
+            </p>
+            <p class="note">Tipp: Auf iPhone/iPad öffnet sich die PDF am zuverlässigsten in der nativen Anzeige.</p>
+          </div>
+        </div>
+      </object>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var pdfPath = 'ProgrammplakatHausfest2025.pdf';
+
+      // Geräte-/Browser-Erkennung (minimal & pragmatisch)
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua);
+      var isSafari = /^((?!chrome|android).)*safari/i.test(ua); // grob
+      var isAndroid = /Android/i.test(ua);
+      var isChromeAndroid = isAndroid && /Chrome\/\d+/i.test(ua);
+
+      // iOS: direkt zur PDF leiten (bester Viewer)
+      if (isIOS) {
+        // Wenn bereits aus einem neuen Tab aufgerufen, nicht in Schleife führen:
+        if (!sessionStorage.getItem('ios-redirected')) {
+          sessionStorage.setItem('ios-redirected', '1');
+          window.location.replace(pdfPath);
+          return;
+        }
+      }
+
+      // Android Chrome kann i. d. R. inline – falls nicht, bleibt Fallback-UI sichtbar
+      // Optional: kleiner "Probe-Check", ob PDF inline gerendert wird
+      // (Nicht 100% zuverlässig, aber verhindert dead-ends)
+      var embedEl = document.getElementById('pdfObj');
+      var timedOut = false;
+      setTimeout(function(){
+        if (timedOut) return;
+        // Wenn Objekt Nullgröße hätte (selten), auf Link verweisen:
+        var rect = embedEl.getBoundingClientRect();
+        if (rect.height < 40) {
+          // als Sicherheitsnetz: neuen Tab öffnen
+          window.location.href = pdfPath;
+        }
+      }, 2500);
+
+      // Buttons: Cache-Buster optional anhängen (falls PDF häufiger aktualisiert wird)
+      var cacheParam = ''; // z. B. '?v=2025-08-19'
+      document.getElementById('openBtn').href = pdfPath + cacheParam;
+      document.getElementById('downloadBtn').href = pdfPath + cacheParam;
+    }());
+  </script>
 </body>
 </html>
-
